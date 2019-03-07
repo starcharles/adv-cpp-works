@@ -9,6 +9,8 @@ Date.o: Date.cpp
 
 Item.o: Item.cpp
 	$(COMPILE) -c $<
+Data.o: Data.cpp
+	$(COMPILE) -c $<
 
 # .PHONY targets
 run : program
