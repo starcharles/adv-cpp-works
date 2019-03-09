@@ -1,13 +1,16 @@
 #include "Date.h"
+#include <random>
+
 
 Date::Date()
 {
 	time(&Now);
 	struct tm Tm;
-	localtime_s(&Tm, &Now);
-//	localtime_r(&Tm, &Now);
+//	localtime_s(&Tm, &Now);
+	localtime_r(&Now, &Tm);
 	Day = Tm.tm_mday; // 1...31
-	strcpy_s(Month, MonthNames[Tm.tm_mon]); // 0...11
+//	strcpy_s(Month, MonthNames[Tm.tm_mon]); // 0...11
+	strcpy(Month, MonthNames[Tm.tm_mon]); // 0...11
 	iMonth = Tm.tm_mon + 1;
 	Year = Tm.tm_year + 1900; // current year - 1900
 }
@@ -24,7 +27,8 @@ Date::Date(const Date &Original)
 	Day = Original.Day; 
 	Year = Original.Year;
 	iMonth = Original.iMonth;
-	strcpy_s(Month, Original.Month);
+//	strcpy_s(Month, Original.Month);
+	strcpy(Month, Original.Month);
 }
 
 
@@ -57,15 +61,19 @@ bool Date::IsLeap(int y)
 char *Date::ToString() const
 {
 	(const_cast<Date *>(this))->pText = new char[12];
-	sprintf_s(pText, 12, "%02d %s %d", Day, Month, Year);
+//	sprintf_s(pText, 12, "%02d %s %d", Day, Month, Year);
+	sprintf(pText, "%02d %s %d", Day, Month, Year);
 	return pText;
 }
 
 void Date::SetMonth(int m)
 {
 	if (m < 1 || m > 12)
-		throw exception("Wrong month");
-	strcpy_s(Month, MonthNames[m - 1]);
+//		throw std::exception("Wrong month");
+		throw std::runtime_error("Wrong month");
+
+//	strcpy_s(Month, MonthNames[m - 1]);
+	strcpy(Month, MonthNames[m - 1]);
 	iMonth = m;
 }
 
@@ -73,34 +81,40 @@ int Date::GetMonth(char *pBuf, int nBuf) const
 {
 	if (!pBuf || nBuf < 4)
 		return iMonth;
-	strcpy_s(pBuf, nBuf, Month); 
+//	strcpy_s(pBuf, nBuf, Month);
+	strcpy(pBuf, Month);
 	return iMonth;
 }
 
 void Date::SetYear(int y)  
 {
 	if (y < 0)
-		throw exception("Wrong year");
+//		throw exception("Wrong year");
+		throw std::runtime_error("Wrong year");
 	Year = y;
 }
 
 void Date::SetDay(int d) 
 {
 	if (d < 1 || d > 31)
-		throw exception("Wrong day");
+		throw std::runtime_error("Wrong day");
+//		throw exception("Wrong day");
 	if ((iMonth == 4 || iMonth == 6 || iMonth == 9 || iMonth == 11) && d == 31)
-		throw exception("Wrong day");
+		throw std::runtime_error("Wrong day");
+//		throw exception("Wrong day");
 	if (iMonth == 2)
 	{
 		if (IsLeap(Year))
 		{
 			if (d > 29)
-				throw exception("Wrong day");
+				throw std::runtime_error("Wrong day");
+//				throw exception("Wrong day");
 		}
 		else
 		{
 			if (d > 28)
-				throw exception("Wrong day");
+				throw std::runtime_error("Wrong day");
+//				throw exception("Wrong day");
 		}
 	}
 	Day = d;
@@ -139,7 +153,8 @@ Date &Date::operator=(const Date &Right)
 	Day = Right.Day; 
 	Year = Right.Year;
 	iMonth = Right.iMonth;
-	strcpy_s(Month, Right.Month);
+//	strcpy_s(Month, Right.Month);
+	strcpy(Month, Right.Month);
 	return *this;
 }
 
@@ -157,12 +172,13 @@ Date Date::CreateRandomDate(Date begin, Date end)
 	tm_end.tm_year = end.GetYear() - 1900;
 	time_t lower = mktime(&tm_begin);
 	time_t upper = mktime(&tm_end);
-	random_device rd; // obtain a random number from hardware
-	mt19937 eng(rd()); // seed the generator
-	uniform_int_distribution<> distr((unsigned int)lower, (unsigned int)upper);
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 eng(rd()); // seed the generator
+	std::uniform_int_distribution<> distr((unsigned int)lower, (unsigned int)upper);
 	time_t time_t_rand = distr(eng);
 	tm tm_rand;
-	localtime_s(&tm_rand, &time_t_rand);
+//	localtime_s(&tm_rand, &time_t_rand);
+	localtime_r(&time_t_rand, &tm_rand);
 	return Date(tm_rand.tm_mday, tm_rand.tm_mon + 1, tm_rand.tm_year + 1900);
 }
 
