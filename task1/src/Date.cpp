@@ -1,7 +1,6 @@
 #include "Date.h"
 #include <random>
 
-
 Date::Date()
 {
 	time(&Now);

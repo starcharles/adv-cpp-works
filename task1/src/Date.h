@@ -1,9 +1,5 @@
 #pragma once
-
 #include <ctime>
-//#include <time.h>
-//#include<stdio.h>
-
 
 class Date
 {

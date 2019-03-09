@@ -1,23 +1,27 @@
 gcc_options = -std=c++11 -Wall --pedantic-errors
-COMPILE=g++ $(gcc_options)
+CMD=g++ $(gcc_options)
+deps=Date.o Item.o Data.o
 
-program : main.cpp Date.o Item.o
-	$(COMPILE) -o $@ $^
+program : main.cpp $(deps)
+	$(CMD) -o $@ $^
 
 Date.o: Date.cpp
-	$(COMPILE) -c $<
+	$(CMD) -c $<
 
 Item.o: Item.cpp
-	$(COMPILE) -c $<
+	$(CMD) -c $<
 Data.o: Data.cpp
-	$(COMPILE) -c $<
+	$(CMD) -c $<
 
-# .PHONY targets
+test: ./test/test.cpp $(deps)
+	$(CMD) -o $@ $^ && ./test
+
 run : program
 	./program
 
+# .PHONY targets
 clean :
 	rm -f ./program && rm -f ./*.o
 
-.PHONY : run clean
+.PHONY : clean
 

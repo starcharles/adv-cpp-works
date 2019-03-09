@@ -1,20 +1,201 @@
-//
-// Created by ns on 2019/03/07.
-//
-
 #include "Data.h"
 #include "Item.h"
 #include <vector>
+
 using namespace std;
 
 Data::Data(int n) {
-    this->items = new vector<Item>(n);
+    pItems = new vector<Item>(n);
 }
 
 Data::~Data() {
-    delete this->items;
+    delete pItems;
 }
 
-void Data::PrintAll() {
-    std::for_each(this->items->begin(), this->items->end(), [](Item& item) { cout << item.name << endl;} );
+void Data::PrintAll() const {
+    std::for_each(this->pItems->begin(), this->pItems->end(),
+                  [](Item &item) { std::cout << item.getName() << std::endl; });
 }
+
+int Data::CountAll() const {
+    return this->pItems->size();
+}
+
+vector <Item> Data::GetGroup(char a) const {
+    vector <Item> group(0);
+    auto addGroup = [&](Item &item) {
+        char g = item.getGroup();
+        if (strcmp(&g, &a) == 0) {
+            group.push_back(item);
+        }
+    };
+    for_each(pItems->begin(), pItems->end(), addGroup);
+    return group;
+}
+
+bool Data::PrintGroup(char c) const {
+    vector <Item> group = this->GetGroup(c);
+
+    if (group.size() == 0) {
+        return false;
+    }
+
+    // print items
+    for_each(group.begin(), group.end(), [](Item &item) {
+        cout << "Item Name: " << item.getName() << endl;
+    });
+
+    return true;
+};
+
+int Data::CountGroup(char g) {
+    return count_if(pItems->begin(), pItems->end(), [&](Item &item) {
+        char group = item.getGroup();
+        return strcmp(&group, &g) == 0;
+    });
+};
+
+vector <Item> Data::GetSubgroup(char g, int sg) {
+    vector <Item> subgroup(0);
+    auto addSubGroup = [&](Item &item) {
+        char gr = item.getGroup();
+
+        if (strcmp(&g, &gr) == 0 && sg == item.getSubGroup()) {
+            subgroup.push_back(item);
+        }
+    };
+    for_each(pItems->begin(), pItems->end(), addSubGroup);
+    return subgroup;
+
+};
+
+bool Data::PrintSubgroupByNames(char g, int sg) {
+    vector <Item> group = this->GetSubgroup(g, sg);
+    if (group.size() == 0) {
+        return false;
+    }
+
+    // TODO: order by name
+
+    // print items
+    for_each(group.begin(), group.end(), [](Item &item) {
+        cout << "Item Name: " << item.getName() << endl;
+    });
+
+    return true;
+
+};
+
+bool Data::PrintSubgroupByDates(char g, int sg) {
+    vector <Item> group = this->GetSubgroup(g, sg);
+    if (group.size() == 0) {
+        return false;
+    }
+
+    // TODO: order by timestamp
+
+    // print items
+    for_each(group.begin(), group.end(), [](Item &item) {
+        cout << "Item Name: " << item.getName() << endl;
+    });
+
+    return true;
+};
+
+int Data::CountSubgroup(char g, int sg) {
+    vector <Item> group = this->GetSubgroup(g, sg);
+    return group.size();
+};
+
+// TODO
+//
+Item *Data::GetItem(char g, int sg, string n) {
+    auto itr = find_if(pItems->begin(), pItems->end(), [&](Item &item) {
+        char gr = item.getGroup();
+        return strcmp(&g, &gr) == 0 && sg == item.getSubGroup() && item.getName() == n;
+    });
+    if (itr == pItems->end()) {
+        return nullptr;
+    }
+    // NOTE:
+    //error: no viable conversion from returned value of type
+    //'std::__1::__wrap_iter<Item *>' to function return type 'Item *'
+    //return it;
+
+    return &(*itr);
+};
+
+Item *Data::GetItem(char g, int sg, Date d) {
+    auto itr = find_if(pItems->begin(), pItems->end(), [&](Item &item) {
+        char gr = item.getGroup();
+        return strcmp(&g, &gr) == 0 && sg == item.getSubGroup() && item.getTimestamp() == d;
+    });
+    if (itr == pItems->end()) {
+        return nullptr;
+    }
+    return &(*itr);
+};
+
+bool Data::PrintItem(char g, int sg, string n) {
+    Item *item = GetItem(g, sg, n);
+    if (item == nullptr) return false;
+    cout << item->toString() << endl;
+    return true;
+};
+
+bool Data::PrintItem(char g, int sg, Date d) {
+    Item *item = GetItem(g, sg, d);
+    if (item == nullptr) return false;
+    cout << item->toString() << endl;
+    return true;
+}
+
+bool Data::RemoveGroup(char g) {
+    int initialSize = pItems->size();
+    int i = 0;
+    for_each(pItems->begin(), pItems->end(), [&](Item &item) {
+        char gr = item.getGroup();
+        if (strcmp(&g, &gr) == 0) {
+            pItems->erase(pItems->begin() + i);
+        }
+        i++;
+    });
+    return initialSize != pItems->size();
+};
+
+bool Data::RemoveSubgroup(char g, int sg) {
+    int initialSize = pItems->size();
+    int i = 0;
+    for_each(pItems->begin(), pItems->end(), [&](Item &item) {
+        char gr = item.getGroup();
+        if (strcmp(&g, &gr) == 0 && item.getSubGroup() == sg) {
+            pItems->erase(pItems->begin() + i);
+        }
+        i++;
+    });
+    return initialSize != pItems->size();
+};
+
+bool Data::RemoveItem(char g, int sg, string n) {
+    auto itr = find_if(pItems->begin(), pItems->end(), [&](Item &item) {
+        char gr = item.getGroup();
+        return strcmp(&g, &gr) == 0 && sg == item.getSubGroup() && item.getName() == n;
+    });
+    if(itr == pItems->end()){
+        return false;
+    }
+    pItems->erase(itr);
+    return true;
+};
+
+bool Data::RemoveItem(char g, int sg, Date d) {
+    auto itr = find_if(pItems->begin(), pItems->end(), [&](Item &item) {
+        char gr = item.getGroup();
+        return strcmp(&g, &gr) == 0 && sg == item.getSubGroup() && item.getTimestamp() == d;
+    });
+    if(itr == pItems->end()){
+        return false;
+    }
+    pItems->erase(itr);
+    return true;
+};
