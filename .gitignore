@@ -1,1 +1,3 @@
 cmake-build-debug/
+task1/src/program
+task1/src/*.o

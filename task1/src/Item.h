@@ -5,15 +5,17 @@ using namespace std;
 
 class Item {
 private:
-    char group; // any from range 'a'...'z'
-    int subgroup; // any from range 0...99
-    string name; // any, but not empty
-    // alternative: string *pname;
-    // by the student's choice
-    Date timestamp; // any
-    // alternative: date *ptimestamp;
-    // by the student's choice
+    char Group; // any from range 'a'...'z'
+    int Subgroup; // any from range 0...99
+    string Name; // any, but not empty
+    Date Timestamp; // any
 public:
+    Item();
     Item(char, int, string, Date);
+    string GetName(void);
+    char GetGroup(void);
+    int GetSubGroup(void);
+    Date GetTimestamp(void);
+    string ToString(void);
 };
 
