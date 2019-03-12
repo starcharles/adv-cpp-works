@@ -14,7 +14,7 @@ Data::~Data() {
 
 void Data::PrintAll() const {
     std::for_each(this->pItems->begin(), this->pItems->end(),
-                  [](Item &item) { std::cout << item.getName() << std::endl; });
+                  [](Item &item) { std::cout << item.GetName() << std::endl; });
 }
 
 int Data::CountAll() const {
@@ -24,7 +24,7 @@ int Data::CountAll() const {
 vector <Item> Data::GetGroup(char a) const {
     vector <Item> group(0);
     auto addGroup = [&](Item &item) {
-        char g = item.getGroup();
+        char g = item.GetGroup();
         if (strcmp(&g, &a) == 0) {
             group.push_back(item);
         }
@@ -42,7 +42,7 @@ bool Data::PrintGroup(char c) const {
 
     // print items
     for_each(group.begin(), group.end(), [](Item &item) {
-        cout << "Item Name: " << item.getName() << endl;
+        cout << item.ToString() << endl;
     });
 
     return true;
@@ -50,7 +50,7 @@ bool Data::PrintGroup(char c) const {
 
 int Data::CountGroup(char g) {
     return count_if(pItems->begin(), pItems->end(), [&](Item &item) {
-        char group = item.getGroup();
+        char group = item.GetGroup();
         return strcmp(&group, &g) == 0;
     });
 };
@@ -58,9 +58,9 @@ int Data::CountGroup(char g) {
 vector <Item> Data::GetSubgroup(char g, int sg) {
     vector <Item> subgroup(0);
     auto addSubGroup = [&](Item &item) {
-        char gr = item.getGroup();
+        char gr = item.GetGroup();
 
-        if (strcmp(&g, &gr) == 0 && sg == item.getSubGroup()) {
+        if (strcmp(&g, &gr) == 0 && sg == item.GetSubGroup()) {
             subgroup.push_back(item);
         }
     };
@@ -76,10 +76,11 @@ bool Data::PrintSubgroupByNames(char g, int sg) {
     }
 
     // TODO: order by name
+//    sort()
 
     // print items
     for_each(group.begin(), group.end(), [](Item &item) {
-        cout << "Item Name: " << item.getName() << endl;
+        cout << item.ToString() << endl;
     });
 
     return true;
@@ -96,7 +97,7 @@ bool Data::PrintSubgroupByDates(char g, int sg) {
 
     // print items
     for_each(group.begin(), group.end(), [](Item &item) {
-        cout << "Item Name: " << item.getName() << endl;
+        cout << item.ToString() << endl;
     });
 
     return true;
@@ -107,16 +108,15 @@ int Data::CountSubgroup(char g, int sg) {
     return group.size();
 };
 
-// TODO
-//
 Item *Data::GetItem(char g, int sg, string n) {
     auto itr = find_if(pItems->begin(), pItems->end(), [&](Item &item) {
-        char gr = item.getGroup();
-        return strcmp(&g, &gr) == 0 && sg == item.getSubGroup() && item.getName() == n;
+        char gr = item.GetGroup();
+        return strcmp(&g, &gr) == 0 && sg == item.GetSubGroup() && item.GetName() == n;
     });
     if (itr == pItems->end()) {
         return nullptr;
     }
+
     // NOTE:
     //error: no viable conversion from returned value of type
     //'std::__1::__wrap_iter<Item *>' to function return type 'Item *'
@@ -127,8 +127,8 @@ Item *Data::GetItem(char g, int sg, string n) {
 
 Item *Data::GetItem(char g, int sg, Date d) {
     auto itr = find_if(pItems->begin(), pItems->end(), [&](Item &item) {
-        char gr = item.getGroup();
-        return strcmp(&g, &gr) == 0 && sg == item.getSubGroup() && item.getTimestamp() == d;
+        char gr = item.GetGroup();
+        return strcmp(&g, &gr) == 0 && sg == item.GetSubGroup() && item.GetTimestamp() == d;
     });
     if (itr == pItems->end()) {
         return nullptr;
@@ -139,14 +139,14 @@ Item *Data::GetItem(char g, int sg, Date d) {
 bool Data::PrintItem(char g, int sg, string n) {
     Item *item = GetItem(g, sg, n);
     if (item == nullptr) return false;
-    cout << item->toString() << endl;
+    cout << item->ToString() << endl;
     return true;
 };
 
 bool Data::PrintItem(char g, int sg, Date d) {
     Item *item = GetItem(g, sg, d);
     if (item == nullptr) return false;
-    cout << item->toString() << endl;
+    cout << item->ToString() << endl;
     return true;
 }
 
@@ -154,7 +154,7 @@ bool Data::RemoveGroup(char g) {
     int initialSize = pItems->size();
     int i = 0;
     for_each(pItems->begin(), pItems->end(), [&](Item &item) {
-        char gr = item.getGroup();
+        char gr = item.GetGroup();
         if (strcmp(&g, &gr) == 0) {
             pItems->erase(pItems->begin() + i);
         }
@@ -167,8 +167,8 @@ bool Data::RemoveSubgroup(char g, int sg) {
     int initialSize = pItems->size();
     int i = 0;
     for_each(pItems->begin(), pItems->end(), [&](Item &item) {
-        char gr = item.getGroup();
-        if (strcmp(&g, &gr) == 0 && item.getSubGroup() == sg) {
+        char gr = item.GetGroup();
+        if (strcmp(&g, &gr) == 0 && item.GetSubGroup() == sg) {
             pItems->erase(pItems->begin() + i);
         }
         i++;
@@ -178,8 +178,8 @@ bool Data::RemoveSubgroup(char g, int sg) {
 
 bool Data::RemoveItem(char g, int sg, string n) {
     auto itr = find_if(pItems->begin(), pItems->end(), [&](Item &item) {
-        char gr = item.getGroup();
-        return strcmp(&g, &gr) == 0 && sg == item.getSubGroup() && item.getName() == n;
+        char gr = item.GetGroup();
+        return strcmp(&g, &gr) == 0 && sg == item.GetSubGroup() && item.GetName() == n;
     });
     if(itr == pItems->end()){
         return false;
@@ -190,8 +190,8 @@ bool Data::RemoveItem(char g, int sg, string n) {
 
 bool Data::RemoveItem(char g, int sg, Date d) {
     auto itr = find_if(pItems->begin(), pItems->end(), [&](Item &item) {
-        char gr = item.getGroup();
-        return strcmp(&g, &gr) == 0 && sg == item.getSubGroup() && item.getTimestamp() == d;
+        char gr = item.GetGroup();
+        return strcmp(&g, &gr) == 0 && sg == item.GetSubGroup() && item.GetTimestamp() == d;
     });
     if(itr == pItems->end()){
         return false;

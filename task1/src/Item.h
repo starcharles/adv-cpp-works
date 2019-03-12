@@ -5,17 +5,18 @@ using namespace std;
 
 class Item {
 private:
-    char group; // any from range 'a'...'z'
-    int subgroup; // any from range 0...99
-    string name; // any, but not empty
-    Date timestamp; // any
+    char Group; // any from range 'a'...'z'
+    int Subgroup; // any from range 0...99
+    string Name; // any, but not empty
+    Date Timestamp; // any
 public:
     Item();
     Item(char, int, string, Date);
-    string getName(void);
-    char getGroup(void);
-    int getSubGroup(void);
-    Date getTimestamp(void);
-    string toString(void);
+    string GetName(void);
+    char GetGroup(void);
+    int GetSubGroup(void);
+    Date GetTimestamp(void);
+    string ToString(void);
+//    bool operator<(const Item &) const;
 };
 

@@ -9,31 +9,31 @@ Item::Item() {
 }
 
 Item::Item(char c, int i, string s, Date d) {
-    group = c;
-    subgroup = i;
-    name = s;
-    timestamp = d;
+    Group = c;
+    Subgroup = i;
+    Name = s;
+    Timestamp = d;
 }
 
-string Item::getName() {
-    return name;
+string Item::GetName() {
+    return Name;
 }
 
-char Item::getGroup() {
-    return group;
+char Item::GetGroup() {
+    return Group;
 }
 
-int Item::getSubGroup() {
-    return subgroup;
+int Item::GetSubGroup() {
+    return Subgroup;
 }
 
-Date Item::getTimestamp() {
-    return timestamp;
+Date Item::GetTimestamp() {
+    return Timestamp;
 }
 
-string Item::toString() {
-    return "Name: " + name + ","\
-           "Group: " + group + ","\
-           "SubGroup: " + std::to_string(subgroup) + ","\
-           "Timestamp: " + timestamp.ToString();
+string Item::ToString() {
+    return "Name: " + Name + ","\
+           "Group: " + Group + ","\
+           "SubGroup: " + std::to_string(Subgroup) + ","\
+           "Timestamp: " + Timestamp.ToString();
 }
