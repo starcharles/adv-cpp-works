@@ -17,6 +17,5 @@ public:
     int GetSubGroup(void);
     Date GetTimestamp(void);
     string ToString(void);
-//    bool operator<(const Item &) const;
 };
 

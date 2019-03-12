@@ -75,8 +75,9 @@ bool Data::PrintSubgroupByNames(char g, int sg) {
         return false;
     }
 
-    // TODO: order by name
-//    sort()
+    sort(group.begin(),group.end(),[](Item &item1, Item &item2)-> bool {
+        return item1.GetName() < item2.GetName();
+    });
 
     // print items
     for_each(group.begin(), group.end(), [](Item &item) {
@@ -84,7 +85,6 @@ bool Data::PrintSubgroupByNames(char g, int sg) {
     });
 
     return true;
-
 };
 
 bool Data::PrintSubgroupByDates(char g, int sg) {
@@ -93,7 +93,9 @@ bool Data::PrintSubgroupByDates(char g, int sg) {
         return false;
     }
 
-    // TODO: order by timestamp
+    sort(group.begin(),group.end(),[](Item &item1, Item &item2)-> bool {
+        return item1.GetTimestamp() < item2.GetTimestamp();
+    });
 
     // print items
     for_each(group.begin(), group.end(), [](Item &item) {
